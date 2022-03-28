@@ -10,6 +10,18 @@
     <div>
       <img class="my-image" :src="qrImage" alt="test"/>
     </div>
+    <div>
+      <iframe
+        id="iframe"
+        title="This is a unique title"
+        src="sample.html"
+      />
+    </div>
+    <div>
+      <button id="file_download" class="btn btn-secondary" @click="download">
+        download
+      </button>
+    </div>
     <button id="logout" class="btn btn-secondary" @click="logout">
       Logout
     </button>
@@ -17,9 +29,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed } from 'vue';
+import {
+  defineComponent, onMounted, computed,
+} from 'vue';
 import userStore from '@/stores/user';
 import FormLogin from '@/components/FormLogin.vue';
+import FileSaver from 'file-saver';
 import { Decoder } from '@nuintun/qrcode';
 
 const qrcode = new Decoder();
@@ -42,7 +57,16 @@ export default defineComponent({
       console.log('logging out');
       console.log(userStore.state);
     };
-    return { userStore, logout, qrImage };
+
+    const download = () => {
+      console.log('downloading');
+      const blob = new Blob(['Hello, world!'], { type: 'text/plain;charset=utf-8' });
+      FileSaver.saveAs(blob, 'hello world.txt');
+    };
+
+    return {
+      userStore, logout, download, qrImage,
+    };
   },
 });
 </script>

@@ -1,5 +1,6 @@
 *** Settings ***
 Library   Browser
+Library   OCRLibrary
 
 *** Variables ***
 ${URL}              http://localhost:8080/
@@ -29,27 +30,17 @@ Check Title
 Check QR Code
     ${image_url} =   Get Property    img    src
     log to console  ${image_url}
-    Grant Permissions    camera
-
-Check Iframe text
-    Get Text   id=iframe >>> id=header-title    ==    MY BLOG
-
-Download File
-    ${dl_promise}          Promise To Wait For Download    /path/to/download/file.name
-    Click                \#file_download
-    ${file_obj}=           Wait For  ${dl_promise}
-    File Should Exist    ${file_obj}[saveAs]
-    Should Be True       ${file_obj.suggestedFilename}
+    # ${read_image} =    Read Image   ${image_url}
+    # log to console  ${read_image}
 
 *** Test Cases ***
-Open Browser Page
-    Open Webpage
-    Fill Username
-    Fill Password
-    Click Login
-    Check Title
-    Check QR Code
-    Check Iframe text
+Scenario: Login page
+    Given Open Webpage
+    And Fill Username
+    And Fill Password
+    When Click Login
+    Then Check Title
+    Then Check QR Code
 
 
 #   New Browser    chromium    headless=false
