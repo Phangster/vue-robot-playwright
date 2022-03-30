@@ -64,6 +64,7 @@ export default defineComponent({
         console.log(err);
       });
     });
+
     const logout = () => {
       userStore.logout();
       console.log('logging out');
@@ -75,7 +76,6 @@ export default defineComponent({
       const blob = new Blob(['Hello, world!'], { type: 'text/plain;charset=utf-8' });
       FileSaver.saveAs(blob, 'hello world.txt');
     };
-
     return {
       userStore, logout, download, qrImage, testQR,
     };
