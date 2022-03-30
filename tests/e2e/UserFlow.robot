@@ -1,14 +1,18 @@
 *** Settings ***
-Library   Browser      jsextension=${CURDIR}/modules/modules.js
+Library   Browser               jsextension=${CURDIR}/modules/modules.js
+Library   ./lib/CustomLib.py
 
 *** Variables ***
 ${URL}              http://localhost:8080/
 ${CLICK_LOGIN}      //button[contains(text(), "Login")]
 ${USER_NAME}        bryan
 ${PASSWORD}         123456
-${avatar}           css: div.qrcode > img
 
 *** Keywords ***
+Generate random email
+    ${random_email}     Generate Random Emails    ${8}
+    log to console  ${random_email}  
+
 Open Webpage
     New Browser    chromium    headless=false
     New Context    viewport={'width': 1920, 'height': 1080}
@@ -23,15 +27,14 @@ Fill Password
 Click Login
     Click         ${CLICK_LOGIN}
 
+Check Title
+    Get Text     id=title    *=    Welcome
+
 Check QR Code
-    # ${image_dom} =     Get Element    \#reader
-    # log to console     ${image_dom}
-    # Element Should Be Visible    ${avatar}
     ${image_url} =   Get Property    img    src
-    # log to console  ${image_url}
+    log to console  ${image_url}
     ${url}=   decodeQr    ${image_url}
-    log to console        TESTING
-    log to console        ${url}
+    log to console   ${url}
     # Should be equal  ${url}    Fast and reliable end-to-end testing for modern web apps | Playwright
     # ${decoded_url}     Decode Qrcode    ${image_url}
     # log to console   TESTING
@@ -55,9 +58,11 @@ Download QR code
 *** Test Cases ***
 Scenario: Login page
     Given Open Webpage
+    When Generate random email
     Then Fill Username
     And Fill Password
     When Click Login
+    Then Check Title
     And Check QR Code
     # And Download QR code
     # And Get URL Qr Code

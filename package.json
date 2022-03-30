@@ -11,8 +11,12 @@
   },
   "dependencies": {
     "@nuintun/qrcode": "^3.1.1",
+    "@zxing/browser": "^0.1.1",
+    "@zxing/library": "^0.19.1",
+    "blob-util": "^2.0.2",
     "core-js": "^3.8.3",
     "file-saver": "^2.0.5",
+    "html5-qrcode": "^2.2.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
@@ -39,6 +43,7 @@
     "eslint-plugin-vue": "^8.0.3",
     "eslint-plugin-vuejs-accessibility": "^1.1.0",
     "jest": "^27.0.5",
+    "raw-loader": "^4.0.2",
     "ts-jest": "^27.0.4",
     "typescript": "~4.5.5"
   }

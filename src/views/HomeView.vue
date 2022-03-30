@@ -7,8 +7,8 @@
     <div>
       <a href="https://www.wikipedia.org/">Wikipedia link</a>
     </div>
-    <div>
-      <img class="my-image" :src="qrImage" alt="test"/>
+    <div class="qrcode">
+      <img id="reader" class="my-image" :src="`data:image/png;base64,${testQR}`" alt="test"/>
     </div>
     <div>
       <iframe
@@ -30,14 +30,15 @@
 
 <script lang="ts">
 import {
-  defineComponent, onMounted, computed,
+  defineComponent, onMounted, computed, ref,
 } from 'vue';
 import userStore from '@/stores/user';
 import FormLogin from '@/components/FormLogin.vue';
 import FileSaver from 'file-saver';
-import { Decoder } from '@nuintun/qrcode';
+// import { Decoder } from '@nuintun/qrcode';
+import { imgSrcToBlob, blobToBase64String } from 'blob-util';
 
-const qrcode = new Decoder();
+// const qrcode = new Decoder();
 
 export default defineComponent({
   name: 'App',
@@ -45,11 +46,22 @@ export default defineComponent({
   setup() {
     // eslint-disable-next-line global-require
     const qrImage = computed(() => require('@/assets/test_qr.png'));
+    const testQR = ref();
     onMounted(() => {
       // eslint-disable-next-line no-unused-expressions
       userStore.getUser;
-      qrcode.scan(qrImage.value).then((decode: any) => {
-        console.log('this is the decoded qr code', decode.data);
+      // qrcode.scan(qrImage.value).then((decode: any) => {
+      //   console.log('this is the decoded qr code', decode.data);
+      // });
+      console.log('ehllo');
+      imgSrcToBlob(qrImage.value).then((blob) => {
+        blobToBase64String(blob).then((base64String) => {
+          testQR.value = base64String;
+        }).catch((err) => {
+          console.log(err);
+        });
+      }).catch((err) => {
+        console.log(err);
       });
     });
     const logout = () => {
@@ -65,7 +77,7 @@ export default defineComponent({
     };
 
     return {
-      userStore, logout, download, qrImage,
+      userStore, logout, download, qrImage, testQR,
     };
   },
 });
